@@ -7,7 +7,7 @@ import {
 import FormComic from "./FormComic";
 import {useEffect, useState} from "react";
 import query from "./api";
-import {Edit} from "@mui/icons-material";
+import {Delete, Edit} from "@mui/icons-material";
 
 const darkTheme = createTheme({
     palette: {
@@ -23,18 +23,20 @@ const CardContentNoPadding = styled(CardContent)(`
   }
 `);
 
-function FormImage({imgBlob, imgText, imageIndex, isLoading}) {
+function FormImage({imgBlob, imgText, imageIndex, isLoading, deleteImage}) {
     const loadingEle = <Skeleton variant="rectangular" width={512} height={512} animation="wave" />;
     const imgEle = <CardMedia image={imgBlob} component="img" height={512}/>;
     const imgRend = isLoading ? loadingEle : imgEle;
+
+
 
     return (
         <Card sx={{maxWidth: 512}}>
             {imgRend}
             <CardContentNoPadding>
                 {imgText}
-                <IconButton>
-                    <Edit />
+                <IconButton onClick={() => deleteImage(imageIndex)}>
+                    <Delete />
                 </IconButton>
             </CardContentNoPadding>
             {/*<CardActions>*/}
@@ -81,8 +83,16 @@ function App() {
         setNumImages(prevState => prevState + 1);
     }
 
+    const deleteImage = (imageIndex) => {
+        setImageArr(prevState => {
+            let newState = {...prevState};
+            delete newState[imageIndex];
+            return newState;
+        });
+    }
+
     const comicImages = Object.entries(imageArr).map(([key, value]) => {
-        return <FormImage imgBlob={value["url"]} key={key} imageIndex={key} imgText={value["text"]} isLoading={value["isLoading"]}/>
+        return <FormImage imgBlob={value["url"]} key={key} imageIndex={key} imgText={value["text"]} isLoading={value["isLoading"]} deleteImage={deleteImage}/>
     })
 
     return (
