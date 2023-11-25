@@ -1,13 +1,56 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.app-body {
+  position:fixed;
+  height: 100%;
+  display: grid;
+  grid-template-columns: [first] auto [second] auto;
+  grid-template-rows: [first] auto;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.image-list {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  flex-wrap: wrap;
+  overflow: auto;
+  width: 100%;
 }
+
+.form-list {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  flex-wrap: wrap;
+  overflow: hidden;
+  width: 100%;
+}
+
+.text-box {
+  padding: 5px;
+}
+
+/*.form-list {*/
+/*  position: fixed;*/
+/*  left: 0;*/
+/*  top: 0;*/
+/*  bottom: 0;*/
+/*  right: 75%;*/
+/*  overflow: hidden;*/
+/*  padding: 2em;*/
+/*}*/
+
+/*.image-list {*/
+/*  position: absolute;*/
+/*  left: 25%;*/
+/*  top: 0;*/
+/*  bottom: 0;*/
+/*  right: 0;*/
+/*  overflow-y: auto;*/
+/*  padding: 2em;*/
+/*  display: flex;*/
+/*  flex-direction: row;*/
+/*  flex-wrap: wrap;*/
+/*}*/
+
+
+
+
