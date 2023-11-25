@@ -1,94 +1,99 @@
 import './App.css';
-import {TextField, IconButton, Grid, ImageList, ImageListItem, CircularProgress} from "@mui/material";
-import DoneIcon from '@mui/icons-material/Done';
+import {
+    ImageList,
+    CircularProgress,
+    Box, Skeleton, AppBar, IconButton, Card, CardMedia, CardActions, CardContent, createTheme, ThemeProvider, styled,
+} from "@mui/material";
+import FormComic from "./FormComic";
 import {useEffect, useState} from "react";
 import query from "./api";
+import {Edit} from "@mui/icons-material";
 
+const darkTheme = createTheme({
+    palette: {
+        mode: 'dark',
+    },
+});
 
-function FormComic({updateText, formIndex}) {
-    function handleSubmit(event) {
-        // hasSubmitted = true;
-        event.preventDefault();
-        const text = event.target.elements.text.value;
-        // console.log(text);
-        updateText(text, formIndex);
-    }
+// card content with no padding
+const CardContentNoPadding = styled(CardContent)(`
+  padding: 0;
+  &:last-child {
+    padding-bottom: 0;
+  }
+`);
+
+function FormImage({imgBlob, imgText, imageIndex, isLoading}) {
+    const loadingEle = <Skeleton variant="rectangular" width={512} height={512} animation="wave" />;
+    const imgEle = <CardMedia image={imgBlob} component="img" height={512}/>;
+    const imgRend = isLoading ? loadingEle : imgEle;
 
     return (
-        <div className="text-box">
-            <form onSubmit={handleSubmit}>
-                <TextField id="text"/>
-                <IconButton type="submit">
-                    <DoneIcon/>
+        <Card sx={{maxWidth: 512}}>
+            {imgRend}
+            <CardContentNoPadding>
+                {imgText}
+                <IconButton>
+                    <Edit />
                 </IconButton>
-            </form>
-        </div>
-
-    );
-}
-function FormImage({imgBlob, getImage, imageIndex}) {
-
-    return (
-        <ImageListItem key={imageIndex} className="image-list-item">
-            <img src={imgBlob} loading="lazy" alt="generated using prompt"/>
-        </ImageListItem>
+            </CardContentNoPadding>
+            {/*<CardActions>*/}
+            {/*    <IconButton aria-label="edit">*/}
+            {/*        <Edit />*/}
+            {/*    </IconButton>*/}
+            {/*</CardActions>*/}
+        </Card>
     )
 }
 
-function Slider(){
-
-}
 
 function App() {
-    const ids = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-    const [textArr, setTextArr] = useState(Array(10).fill(""))
-    let [imageArr, setImageArr] = useState({})
+    const ids = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    const [numImages, setNumImages] = useState(0);
+    const [imgIds, setImgIds] = useState(1);
+    let [imageArr, setImageArr] = useState({});
 
     const updateText = async (text, index) => {
         // console.log(text);
         // console.log(index);
-        setTextArr(prevState => {
-            let newState = [...prevState];
-            newState[index] = text;
-            return newState;
-        });
-        await updateImage(index, text);
+        await generateImage(text);
     }
 
-    const updateImage = async (imagePos, text) => {
+    const generateImage = async (text) => {
+        // incrementing image ids
+        const imagePos = imgIds;
+        setImgIds(prevState => prevState + 1);
+        let imageObj = {"text": text, "url": "", "isLoading": true};
         setImageArr(prevState => {
             let newState = {...prevState};
-            newState[imagePos] = "public/giphy.webp";
+            newState[imagePos] = imageObj;
             return newState;
         });
         const response = await query({"inputs": text});
         const imageUrl = URL.createObjectURL(response);
+        imageObj["isLoading"] = false;
+        imageObj["url"] = imageUrl;
         setImageArr(prevState => {
             let newState = {...prevState};
-            newState[imagePos] = imageUrl;
+            newState[imagePos] = imageObj;
             return newState;
         });
+        setNumImages(prevState => prevState + 1);
     }
 
-
-    const comicForms = ids.map((id) => {
-        return <FormComic updateText={updateText} key={id} formIndex={id}/>
-    })
     const comicImages = Object.entries(imageArr).map(([key, value]) => {
-        return <FormImage imgBlob={value} key={key} imageIndex={key}/>
+        return <FormImage imgBlob={value["url"]} key={key} imageIndex={key} imgText={value["text"]} isLoading={value["isLoading"]}/>
     })
 
     return (
-        <Grid container spacing={2}>
-            <Grid item xs={2}>
-                {comicForms}
-            </Grid>
-            <Grid item>
-                <ImageList>
-                    {comicImages}
-                </ImageList>
-            </Grid>
-        </Grid>
+        <ThemeProvider theme={darkTheme}>
+            <div className={"img-box"}>
+                {comicImages}
+            </div>
+            <div className={"text-flex"}>
+                <FormComic updateText={updateText} key={0} formIndex={0}/>
+            </div>
+        </ThemeProvider>
   );
 }
 
@@ -101,3 +106,13 @@ export default App;
 //         {comicImages}
 //     </div>
 // </div>
+// <Grid container spacing={2}>
+//     <Grid item xs={2}>
+//         {comicForms}
+//     </Grid>
+//     <Grid item>
+//         <ImageList>
+//             {comicImages}
+//         </ImageList>
+//     </Grid>
+// </Grid>
