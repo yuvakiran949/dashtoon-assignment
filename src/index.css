@@ -8,10 +8,6 @@ body {
   flex-direction: row;
   justify-content: center;
 }
-.text-box {
-  position: fixed;
-  bottom: 10px;
-}
 
 .img-box {
   display: flex;

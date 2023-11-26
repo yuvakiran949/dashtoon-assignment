@@ -1,13 +1,20 @@
 import './App.css';
 import {
-    ImageList,
-    CircularProgress,
-    Box, Skeleton, AppBar, IconButton, Card, CardMedia, CardActions, CardContent, createTheme, ThemeProvider, styled,
+    Skeleton,
+    IconButton,
+    Card,
+    CardMedia,
+    CardActions,
+    CardContent,
+    createTheme,
+    ThemeProvider,
+    styled,
+    useMediaQuery,
 } from "@mui/material";
 import FormComic from "./FormComic";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import query from "./api";
-import {Delete, Edit} from "@mui/icons-material";
+import {Delete} from "@mui/icons-material";
 import EditText from "./EditImage";
 
 const darkTheme = createTheme({
@@ -27,11 +34,15 @@ const CardContentNoPadding = styled(CardContent)(`
 `);
 
 function FormImage({imageIndex, deleteImage, imgObj, updateText}) {
+    // trying to make a responsive design
+    const matches = useMediaQuery('(min-width:600px)');
+    const imgSize = matches ? 512 : 256;
     const imgBlob = imgObj["url"];
     const imgText = imgObj["text"];
     const isLoading = imgObj["isLoading"];
-    const loadingEle = <Skeleton variant="rectangular" width={512} height={512} animation="wave" />;
-    const imgEle = <CardMedia image={imgBlob} component="img" height={512}/>;
+    const loadingEle = <Skeleton variant="rectangular" width={imgSize} height={imgSize} animation="wave" />;
+    // objectfit contain to keep aspect ratio
+    const imgEle = <CardMedia image={imgBlob} height={imgSize} component="img"/>;
     const imgRend = isLoading ? loadingEle : imgEle;
 
     return (
@@ -58,6 +69,7 @@ function App() {
 
     const updateText = async (text, index) => {
         let imgObj = {...imageArr[index], isLoading: true, text: text};
+        // using anon functions to update state
         setImageArr(prevState => {
             let newState = {...prevState};
             newState[index] = imgObj;

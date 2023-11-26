@@ -22,6 +22,11 @@ function EditText({imgIndex, imgObj, updateText}) {
     const handleClose = () => setOpen(false);
     const handleOpen = () => setOpen(true);
 
+    const handleSubmit = () => {
+        updateText(textInput.current.value, imgIndex);
+        handleClose();
+    }
+
     return (
         <div>
             <IconButton>
@@ -36,10 +41,15 @@ function EditText({imgIndex, imgObj, updateText}) {
                         id={"updated-text"}
                         variant={"standard"}
                         inputRef={textInput}
+                        placeholder={"Enter the new prompt"}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                handleSubmit();
+                            }
+                        }}
                     />
                     <IconButton
-                        onClick={() => {updateText(textInput.current.value, imgIndex);
-                            handleClose();}}
+                        onClick={handleSubmit}
                     >
                         <Done />
                     </IconButton>
