@@ -15,5 +15,26 @@ async function query(data) {
     return result;
 }
 
+async function uploadToImgur(imgBlob){
+    const postData = {
+        "image": imgBlob
+    }
+    const response = await fetch(
+        "https://api.imgur.com/3/image",
+        {
+            headers: {
+                "Authorization": "Client-ID {{clientId}}"
+            },
+            method: "POST",
+            body: postData
+        }
+    )
+    const result = await response.json();
+
+    const shareURL = result.data.link;
+    return shareURL;
+}
+
 // let blob = query({"imputs": "A cute dog"})
-export default query;
+
+export { uploadToImgur, query };
