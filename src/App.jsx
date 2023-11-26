@@ -11,6 +11,7 @@ import {query, uploadToImgur} from "./api";
 import mergeImages from "merge-images";
 
 
+const maxImages = process.env.REACT_APP_MAX_IMAGES;
 
 function SnackBarBasic({imageIndex, imageText, deleteImage, open, setOpen, errMsg, type}){
     return (
@@ -59,7 +60,7 @@ function App() {
         if (text === "") {
             showErrorMessage("The prompt cannot be empty", "error");
             return false;
-        }else if (Object.keys(imageArr).length >= 10){
+        }else if (Object.keys(imageArr).length >= maxImages) {
             showErrorMessage("You can only generate/have 10 images at a time", "error");
             return false;
         }else{
