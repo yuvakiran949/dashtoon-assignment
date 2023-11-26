@@ -2,14 +2,13 @@ import {useRef, useState} from "react";
 import {IconButton, InputBase, Paper} from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 
-function FormComic({updateText, formIndex}) {
+function FormComic({updateText, formIndex, generateImg}) {
     let textInput = useRef(null);
     const handleSubmit = (event) => {
         // hasSubmitted = true;
         event.preventDefault();
-
         // console.log(text);
-        updateText(textInput.current.value, formIndex);
+        generateImg(textInput.current.value);
         textInput.current.value = "";
     }
     return (
