@@ -20,5 +20,5 @@ Deployed at [https://dashtoon.ryuki.me](https://dashtoon.ryuki.me/)
 - Edit the prompt text to regenerate images
 - Regenerate images with the same prompt text
 - Delete an image
-- Share button directly uploads the image to Imgur and copies the link to clipboard
+- Share button directly uploads the image to Imgur and copies the link to clipboard. (This feature does not work on insecure connections.)
 - Download button downloads the images to the local machine
