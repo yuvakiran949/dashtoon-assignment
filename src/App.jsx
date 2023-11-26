@@ -126,6 +126,10 @@ function App() {
     })
 
     const handleShare = async () => {
+        if(Object.keys(imageArr).length === 0){
+            showErrorMessage("There are no images to share", "info");
+            return;
+        }
         let count = 0;
         const mergeArr = Object.entries(imageArr).map(([key, value]) => {
             if(value["url"] !== ""){return {src: value["url"], x: 0, y: count++ * 512};}
@@ -141,13 +145,39 @@ function App() {
 
     }
 
+    const handleDown = async () => {
+        if(Object.keys(imageArr).length === 0){
+            showErrorMessage("There are no images to download", "info");
+            return;
+        }
+        let count = 0;
+        const mergeArr = Object.entries(imageArr).map(([key, value]) => {
+            if(value["url"] !== ""){
+                let val = {src: value["url"], x: 0, y: count * 512};
+                count++;
+                return val;
+            }
+            // console.log(count);
+            // count++;
+        })
+        const mergeImg = await mergeImages(mergeArr, {
+            width: 512,
+            height: 512 * Object.keys(imageArr).length,
+        });
+        // const link = URL.createObjectURL(mergeImg);
+        const a = document.createElement("a");
+        a.href = mergeImg;
+        a.setAttribute("download", "comic.png");
+        a.click();
+    }
+
     return (
         <Box>
             <div className={"img-box"}>
                 {comicImages}
             </div>
             <div className={"text-flex"}>
-                <FormComic updateText={updateText} key={0} formIndex={0} generateImg={generateImage} handleShare={handleShare}/>
+                <FormComic updateText={updateText} key={0} formIndex={0} generateImg={generateImage} handleShare={handleShare} handleDown={handleDown}/>
             </div>
             <SnackBarBasic open={open} setOpen={setOpen} errMsg={errMsg} type={errType}/>
         </Box>

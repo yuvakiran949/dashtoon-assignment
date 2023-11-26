@@ -32,7 +32,7 @@ function FormImage({imageIndex, deleteImage, imgObj, updateText}) {
     const imgRend = isLoading ? loadingEle : imgEle;
 
     return (
-        <Card sx={{maxWidth: 512}}>
+        <Card sx={{maxWidth: imgSize}}>
             {imgRend}
             <Box sx={{display: "flex", flexDirection: "row"}}>
                 <CardContent>

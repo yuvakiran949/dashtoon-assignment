@@ -1,9 +1,9 @@
 import {useRef} from "react";
 import {IconButton, InputBase, Paper} from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
-import {Share} from "@mui/icons-material";
+import {Download, Share} from "@mui/icons-material";
 
-function FormComic({updateText, formIndex, generateImg, handleShare}) {
+function FormComic({updateText, formIndex, generateImg, handleShare, handleDown}) {
     // using media query to make responsive design
     // const matches = useMediaQuery('(min-width:600px)');
     // const inputSize = matches ? "512" : "80%";
@@ -40,6 +40,9 @@ function FormComic({updateText, formIndex, generateImg, handleShare}) {
                 </IconButton>
                 <IconButton onClick={handleShare}>
                     <Share />
+                </IconButton>
+                <IconButton onClick={handleDown}>
+                    <Download/>
                 </IconButton>
             </Paper>
 

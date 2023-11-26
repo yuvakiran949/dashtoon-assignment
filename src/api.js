@@ -25,7 +25,7 @@ async function uploadToImgur(imgBlob){
         "https://api.imgur.com/3/upload",
         {
             headers: {
-                "Authorization": `Client-ID ${process.env.REACT_APP_CLIENT_ID}`
+                "Authorization": `Client-ID ${process.env.REACT_APP_IMGUR_CLIENT_ID}`,
             },
             method: "POST",
             body: JSON.stringify(postData),
