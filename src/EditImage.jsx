@@ -45,6 +45,7 @@ function EditText({imgIndex, imgObj, updateText}) {
                         onKeyDown={(e) => {
                             if (e.key === 'Enter') {
                                 handleSubmit();
+                                handleClose();
                             }
                         }}
                     />
