@@ -145,6 +145,7 @@ function App() {
             width: 512,
             height: 512 * Object.keys(imageArr).length,
         });
+        showErrorMessage("Uploading image to Imgur...", "info");
         const response = await uploadToImgur(mergeImg);
         if(response["success"]){
             await navigator.clipboard.writeText(response["data"]["link"]);
