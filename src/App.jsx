@@ -133,7 +133,13 @@ function App() {
         }
         let count = 0;
         const mergeArr = Object.entries(imageArr).map(([key, value]) => {
-            if(value["url"] !== ""){return {src: value["url"], x: 0, y: count++ * 512};}
+            if(value["url"] !== ""){
+                let val = {src: value["url"], x: 0, y: count * 512};
+                count++;
+                return val;
+            }
+            // console.log(count);
+            // count++;
         })
         const mergeImg = await mergeImages(mergeArr);
         const response = await uploadToImgur(mergeImg);
