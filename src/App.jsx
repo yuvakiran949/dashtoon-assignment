@@ -1,24 +1,32 @@
 import './App.css';
 import {
-    createTheme,
-    ThemeProvider,
+    Alert,
+    Box,
+    createTheme, Snackbar,
 } from "@mui/material";
 import FormComic from "./FormComic";
 import FormImage from "./FormImage";
 import {useState} from "react";
 import query from "./api";
 
-
-const darkTheme = createTheme({
-    palette: {
-        mode: 'dark',
-    },
-});
-
+function SnackBarBasic({imageIndex, imageText, deleteImage, open, setOpen}){
+    return (
+        <Snackbar
+            open={open}
+            autoHideDuration={4000}
+            onClose={() => setOpen(false)}
+        >
+            <Alert onClose={() => setOpen(false)} severity="error" sx={{ width: '100%' }}>
+                Failed to fetch image
+            </Alert>
+        </Snackbar>
+    )
+}
 
 function App() {
     const [numImages, setNumImages] = useState(0);
     const [imgIds, setImgIds] = useState(1);
+    const [open, setOpen] = useState(false);
     let [imageArr, setImageArr] = useState({});
 
     const updateText = async (text, index) => {
@@ -29,8 +37,7 @@ function App() {
             newState[index] = imgObj;
             return newState;
         });
-        const response = await query({"inputs": text});
-        const imageUrl = URL.createObjectURL(response);
+        const imageUrl = await getImageWithErrHandling(text)
         imgObj["isLoading"] = false;
         imgObj["url"] = imageUrl;
         setImageArr(prevState => {
@@ -38,6 +45,16 @@ function App() {
             newState[index] = imgObj;
             return newState;
         });
+    }
+
+    const getImageWithErrHandling = async (text) => {
+        try {
+            const response = await query({"inputs": text});
+            return URL.createObjectURL(response);
+        }catch(error){
+            setOpen(true)
+            console.log(error)
+        }
     }
 
     const generateImage = async (text) => {
@@ -50,8 +67,7 @@ function App() {
             newState[imagePos] = imageObj;
             return newState;
         });
-        const response = await query({"inputs": text});
-        const imageUrl = URL.createObjectURL(response);
+        const imageUrl = await getImageWithErrHandling(text)
         imageObj["isLoading"] = false;
         imageObj["url"] = imageUrl;
         setImageArr(prevState => {
@@ -72,18 +88,24 @@ function App() {
     }
     // imgBlob={value["url"]} imgText={value["text"]} isLoading={value["isLoading"]}
     const comicImages = Object.entries(imageArr).map(([key, value]) => {
-        return <FormImage imgObj={value}  key={key} imageIndex={key}  deleteImage={deleteImage} updateText={updateText}/>
+        return (
+            // a separate div for padding as the card elements are getting wonky with direct padding
+            <div style={{padding: 5}} key={key}>
+                <FormImage imgObj={value} imageIndex={key}  deleteImage={deleteImage} updateText={updateText}/>
+            </div>
+        )
     })
 
     return (
-        <ThemeProvider theme={darkTheme}>
+        <Box>
             <div className={"img-box"}>
                 {comicImages}
             </div>
             <div className={"text-flex"}>
                 <FormComic updateText={updateText} key={0} formIndex={0} generateImg={generateImage}/>
             </div>
-        </ThemeProvider>
+            <SnackBarBasic open={open} setOpen={setOpen}/>
+        </Box>
   );
 }
 

@@ -17,7 +17,7 @@ function FormComic({updateText, formIndex, generateImg}) {
             <Paper
                 component="div"
                 sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: "80%",
-                    position: "fixed", bottom: "20px", maxWidth: "512px"}}
+                    position: "fixed", bottom: "30px", maxWidth: "512px"}}
             >
                 <InputBase
                     sx={{ ml: 1, flex: 1 }}

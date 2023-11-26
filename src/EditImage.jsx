@@ -29,8 +29,8 @@ function EditText({imgIndex, imgObj, updateText}) {
 
     return (
         <div>
-            <IconButton>
-                <Edit onClick={handleOpen}/>
+            <IconButton onClick={handleOpen}>
+                <Edit />
             </IconButton>
             <Modal
                 open={open}
