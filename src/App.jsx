@@ -36,7 +36,7 @@ function App() {
     let [imageArr, setImageArr] = useState({});
 
     const updateText = async (text, index) => {
-        if (errorHandling(text)){
+        if (errorHandling(text, true)){
             let imgObj = {...imageArr[index], isLoading: true, text: text};
             // using anon functions to update state
             setImageArr(prevState => {
@@ -56,11 +56,11 @@ function App() {
         }
     }
 
-    const errorHandling = (text) => {
+    const errorHandling = (text, isUpdate) => {
         if (text === "") {
             showErrorMessage("The prompt cannot be empty", "error");
             return false;
-        }else if (Object.keys(imageArr).length >= maxImages) {
+        }else if (Object.keys(imageArr).length >= maxImages && !isUpdate) {
             showErrorMessage("You can only generate/have 10 images at a time", "error");
             return false;
         }else{
@@ -85,7 +85,7 @@ function App() {
     }
 
     const generateImage = async (text) => {
-        if (errorHandling(text)) {
+        if (errorHandling(text, false)) {
             setNumImages(prevState => prevState + 1);
             // incrementing image ids
             const imagePos = imgIds;
