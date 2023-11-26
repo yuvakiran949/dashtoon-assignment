@@ -8,15 +8,18 @@ import FormComic from "./FormComic";
 import FormImage from "./FormImage";
 import {useState} from "react";
 import {query, uploadToImgur} from "./api";
+import mergeImages from "merge-images";
 
-function SnackBarBasic({imageIndex, imageText, deleteImage, open, setOpen, errMsg}){
+
+
+function SnackBarBasic({imageIndex, imageText, deleteImage, open, setOpen, errMsg, type}){
     return (
         <Snackbar
             open={open}
             autoHideDuration={4000}
             onClose={() => setOpen(false)}
         >
-            <Alert onClose={() => setOpen(false)} severity="error" sx={{ width: '100%' }}>
+            <Alert onClose={() => setOpen(false)} severity={type} sx={{ width: '100%' }}>
                 {errMsg}
             </Alert>
         </Snackbar>
@@ -28,6 +31,7 @@ function App() {
     const [imgIds, setImgIds] = useState(1);
     const [open, setOpen] = useState(false);
     const [errMsg, setErrMsg] = useState("");
+    const [errType, setErrType] = useState("info");
     let [imageArr, setImageArr] = useState({});
 
     const updateText = async (text, index) => {
@@ -42,6 +46,7 @@ function App() {
             const imageUrl = await getImageWithErrHandling(text)
             imgObj["isLoading"] = false;
             imgObj["url"] = imageUrl;
+            //TODO handle for when image is deleted while it is still being fetched
             setImageArr(prevState => {
                 let newState = {...prevState};
                 newState[index] = imgObj;
@@ -52,25 +57,29 @@ function App() {
 
     const errorHandling = (text) => {
         if (text === "") {
-            setErrMsg("The prompt cannot be empty")
-            setOpen(true)
+            showErrorMessage("The prompt cannot be empty", "error");
             return false;
-        }else if (Object.keys(imageArr).length > 10){
-            setErrMsg("You can only generate 10 images at a time")
-            setOpen(true)
+        }else if (Object.keys(imageArr).length >= 10){
+            showErrorMessage("You can only generate/have 10 images at a time", "error");
             return false;
         }else{
             return true;
         }
     }
+
+    const showErrorMessage = (text, type) => {
+        setOpen(true)
+        setErrMsg(text);
+        setErrType(type);
+    }
+
     const getImageWithErrHandling = async (text) => {
         try {
             const response = await query({"inputs": text});
             return URL.createObjectURL(response);
         }catch(error){
-            setErrMsg("An error occurred while generating the image")
-            setOpen(true)
-            console.log(error)
+            showErrorMessage("An error occurred while generating the image", "error");
+            console.log(error);
         }
     }
 
@@ -89,6 +98,7 @@ function App() {
             const imageUrl = await getImageWithErrHandling(text)
             imageObj["isLoading"] = false;
             imageObj["url"] = imageUrl;
+            //TODO handle for when image is deleted while it is still being fetched
             setImageArr(prevState => {
                 let newState = {...prevState};
                 newState[imagePos] = imageObj;
@@ -115,15 +125,31 @@ function App() {
         )
     })
 
+    const handleShare = async () => {
+        let count = 0;
+        const mergeArr = Object.entries(imageArr).map(([key, value]) => {
+            if(value["url"] !== ""){return {src: value["url"], x: 0, y: count++ * 512};}
+        })
+        const mergeImg = await mergeImages(mergeArr);
+        const response = await uploadToImgur(mergeImg);
+        if(response["success"]){
+            await navigator.clipboard.writeText(response["data"]["link"]);
+            showErrorMessage("The link has been copied to your clipboard", "success");
+        }else{
+            showErrorMessage("An error occurred while uploading the image to Imgur", "error");
+        }
+
+    }
+
     return (
         <Box>
             <div className={"img-box"}>
                 {comicImages}
             </div>
             <div className={"text-flex"}>
-                <FormComic updateText={updateText} key={0} formIndex={0} generateImg={generateImage}/>
+                <FormComic updateText={updateText} key={0} formIndex={0} generateImg={generateImage} handleShare={handleShare}/>
             </div>
-            <SnackBarBasic open={open} setOpen={setOpen} errMsg={errMsg}/>
+            <SnackBarBasic open={open} setOpen={setOpen} errMsg={errMsg} type={errType}/>
         </Box>
   );
 }

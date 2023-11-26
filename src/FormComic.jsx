@@ -3,7 +3,7 @@ import {IconButton, InputBase, Paper} from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import {Share} from "@mui/icons-material";
 
-function FormComic({updateText, formIndex, generateImg}) {
+function FormComic({updateText, formIndex, generateImg, handleShare}) {
     // using media query to make responsive design
     // const matches = useMediaQuery('(min-width:600px)');
     // const inputSize = matches ? "512" : "80%";
@@ -14,6 +14,7 @@ function FormComic({updateText, formIndex, generateImg}) {
         generateImg(textInput.current.value);
         textInput.current.value = "";
     }
+
     return (
             <Paper
                 component="div"
@@ -37,7 +38,7 @@ function FormComic({updateText, formIndex, generateImg}) {
                 <IconButton type="button" sx={{ p: '10px' }} aria-label="search" onClick={handleSubmit}>
                     <DoneIcon />
                 </IconButton>
-                <IconButton>
+                <IconButton onClick={handleShare}>
                     <Share />
                 </IconButton>
             </Paper>

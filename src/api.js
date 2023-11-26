@@ -4,7 +4,7 @@ async function query(data) {
         {
             headers: {
                 "Accept": "image/png",
-                "Authorization": "Bearer VknySbLLTUjbxXAXCjyfaFIPwUTCeRXbFSOjwRiCxsxFyhbnGjSFalPKrpvvDAaPVzWEevPljilLVDBiTzfIbWFdxOkYJxnOPoHhkkVGzAknaOulWggusSFewzpqsNWM",
+                "Authorization": `Bearer ${process.env.REACT_APP_AUTHORIZATION_TOKEN}`,
                 "Content-Type": "application/json"
             },
             method: "POST",
@@ -17,22 +17,23 @@ async function query(data) {
 
 async function uploadToImgur(imgBlob){
     const postData = {
-        "image": imgBlob
+        image: imgBlob,
+        type: "base64",
+        title: "testing"
     }
     const response = await fetch(
-        "https://api.imgur.com/3/image",
+        "https://api.imgur.com/3/upload",
         {
             headers: {
-                "Authorization": "Client-ID {{clientId}}"
+                "Authorization": `Client-ID ${process.env.REACT_APP_CLIENT_ID}`
             },
             method: "POST",
-            body: postData
+            body: JSON.stringify(postData),
+            // formData: JSON.stringify(postData)
         }
     )
     const result = await response.json();
-
-    const shareURL = result.data.link;
-    return shareURL;
+    return result;
 }
 
 // let blob = query({"imputs": "A cute dog"})
