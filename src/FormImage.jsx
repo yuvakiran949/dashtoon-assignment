@@ -21,7 +21,7 @@ import EditText from "./EditImage";
 
 function FormImage({imageIndex, deleteImage, imgObj, updateText}) {
     // trying to make a responsive design
-    const matches = useMediaQuery('(min-width:600px)');
+    const matches = useMediaQuery('(min-width:1060px)');
     const imgSize = matches ? 512 : 256;
     const imgBlob = imgObj["url"];
     const imgText = imgObj["text"];
