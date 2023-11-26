@@ -16,11 +16,14 @@ async function query(data) {
 }
 
 async function uploadToImgur(imgBlob){
-    const postData = {
-        image: imgBlob,
-        type: "base64",
-        title: "testing"
-    }
+    const formData = new FormData();
+    formData.append("image", imgBlob.split(",")[1]);
+    formData.append("type", "base64");
+    // const postData = {
+    //     image: imgBlob,
+    //     type: "base64",
+    //     title: "testing"
+    // }
     const response = await fetch(
         "https://api.imgur.com/3/upload",
         {
@@ -28,7 +31,7 @@ async function uploadToImgur(imgBlob){
                 "Authorization": `Client-ID ${process.env.REACT_APP_IMGUR_CLIENT_ID}`,
             },
             method: "POST",
-            body: JSON.stringify(postData),
+            body: formData,
             // formData: JSON.stringify(postData)
         }
     )
