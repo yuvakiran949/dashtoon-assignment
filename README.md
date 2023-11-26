@@ -1,6 +1,6 @@
 **Note: The App is hardcoded to have a maximum of 10 images. This can be changed by changing the `REACT_APP_MAX_IMAGES` environment variable.**
 
-Deployed at [https://dreamtoon.ryuki.me](https://dreamtoon.netlify.app/)
+Deployed at [https://dashtoon.ryuki.me](https://dashtoon.ryuki.me/)
 
 ## Installation
 1. Clone the repository
