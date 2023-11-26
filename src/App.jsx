@@ -141,7 +141,10 @@ function App() {
             // console.log(count);
             // count++;
         })
-        const mergeImg = await mergeImages(mergeArr);
+        const mergeImg = await mergeImages(mergeArr, {
+            width: 512,
+            height: 512 * Object.keys(imageArr).length,
+        });
         const response = await uploadToImgur(mergeImg);
         if(response["success"]){
             await navigator.clipboard.writeText(response["data"]["link"]);
